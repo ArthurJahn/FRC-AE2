@@ -1,2 +1,2 @@
 # FRC-AE2
-Atividade Extra 2 para o curso de Fundamentos de Redes de Computadores 
+Relatório para Atividade Extra 2 do curso de Fundamentos de Redes de Computadores 
