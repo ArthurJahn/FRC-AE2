@@ -10,67 +10,70 @@
 \usepackage{hyperref}
 \hypersetup{pdfpagelayout=SinglePage, % ou TwoPageLeft
     colorlinks=true,
-    pdftitle={Relat\'orio de Redes},
+    pdftitle={Relat\'orio de asuhaush Redes},
     pdfauthor={\'Aulus Diniz, Arthur Jahn}}
 
 %*******************************************************
-% Definindo novos teoremas
-\usepackage{theorem}
-\newtheorem{teo}{Teorema}[chapter] % usa contador associado ao capitulo
-\newtheorem{cor}[teo]{Corol\'ario} % usa mesmo contador do teorema
-\newtheorem{lem}[teo]{Lema} % usa mesmo contador do teorema
-\newtheorem{prop}[teo]{Proposi\c{c}\~ao} % usa mesmo contador do teorema
-\newtheorem{axi}[teo]{Axioma} % usa mesmo contador do teorema
-\theorembodyfont{\normalfont\upshape} % agora, nao eh mais fonte italico
-\newtheorem{defn}[teo]{Defini\c{c}\~ao} % usa mesmo contador do teorema
-\newtheorem{ex}{Exemplo}[chapter] % usa contador associado ao capitulo
-\newtheorem{exerc}{Exercício}[chapter] % usa contador associado ao capitulo
 
-% Ambiente para demonstracao que coloca quadrado no final, usando \rule
-% Nota: \rule{largura}{altura} produz um retagulo preto.
-\newenvironment{dem}[1][Demonstra\c c\~ao]{\textbf{#1:}\
 
-}  {\hfill\rule{1ex}{1ex}}
-%*******************************************************
-% Definindo novos comandos
-\providecommand{\sin}{} \renewcommand{\sin}{\hspace{2pt}\textrm{sen}}
-\newcommand{\R}{\mathbb{R}} %simbolos de numeros reais
-%*******************************************************
-\title{Relat\'orio de Redes: Camada de transporte}
-\author{Arthur Jahn, \'Aulus Diniz}
-\date{2015}    %para ocultar a data digite: \date{ }
+\title{Fundamentos de Redes de Computadores: Camada de transporte}
+\author{Arthur Jahn, Áulus Diniz}
+\date{26 de Outubro de 2015}    %para ocultar a data digite: \date{ }
 %*******************************************************
 \begin{document}    %Inicio do documento
 \maketitle  %cria o titulo na capa
 
 \tableofcontents %Sumario
 %-------------------------------------------------------
-\chapter{Captura e an\'alise de pacote}
+\chapter{Protocolos de Camada de Aplicação}
 \label{chap_primeiro} %rotulo que pode ser usado em referencia cruzada
 
-\section{Protocolos}
-\label{sec_primeiro_protocolos}
+\section{Monitoramento e Coleta de Pacotes}
+\label{sec_primeiro_monitoramento}
 
-Os protocolos utilizados nas transações foram:
-
+Aqui deve vir o processo de preparação para o monitoramento e captura de pacotes para os protocolos da camada
+de aplicação. Sendo estes:  
 \begin{enumerate}[a)]
  \item HTTP;
  \item FTP;
  \item DNS;
- \item TCP;
- \item UDP.
 \end{enumerate}
 
-\section{Dados coletados}
-\label{sec_primeiro_dados}
-Aqui vão os dados coletados.
+\section{Protocolo HTTP}
+\label{sec_http}
+Aqui vai algo sobre o protocolo http.
+\subsection{Dados coletados}
+\label{sub_http_dados}
+Aqui vão os dados coletados para o protocolo HTTP.
 
-\section{Análise}
-\label{sec_primeiro_analise}
-Aqui vai a analise dos dados coletados.
+\subsection{Análise}
+\label{sub_http_analise}
+Aqui vai a análise dos dados coletados para o protocolo HTTP.
+
+\section{Protocolo DNS}
+\label{sec_dns}
+Aqui vai algo sobre o protocolo dns.
+\subsection{Dados coletados}
+\label{sub_dns_dados}
+Aqui vão os dados coletados para o protocolo DNS.
+
+\subsection{Análise}
+\label{sub_dns_analise}
+Aqui vai a análise dos dados coletados para o protocolo DNS.
+
+\section{Protocolo FTP}
+\label{sec_ftp}
+Aqui vai algo sobre o protocolo ftp.
+\subsection{Dados coletados}
+\label{sub_ftp_dados}
+Aqui vão os dados coletados para o protocolo FTP.
+
+\subsection{Análise}
+\label{sub_ftp_analise}
+Aqui vai a análise dos dados coletados para o protocolo FTP.
 
 %-------------------------------------------------------
-\chapter{Segundo cap\'itulo}
+\chapter{Segundo capítulo}
 \label{chap_segundo}
 
 \section{Protocolos}
@@ -82,26 +85,10 @@ Aqui vai a analise dos dados coletados.
 \section{Análise}
 \label{sec_segundo}
 
-\subsection{Subse\c c\~ao}
+\subsection{Subseção}
 \label{subsec_nome}
 
-\begin{teo}
-Exemplo de teorema.
-\end{teo}
 
-\begin{ex}
-Exemplo de equa\c c\~ao matem\'atica com m\'ultiplas linhas.
-
-\[
-\begin{gathered}
-  5x - 10 = 0 \hfill \\
-  5x = 10 \hfill \\
-  x = 2 \hfill \\ 
-\end{gathered} 
-\]
-
-Para equa\c c\~oes mais complexas leia \href{http://ctan.tche.br/help/Catalogue/entries/voss-mathmode.html}{mathmode.pdf} e \href{http://latexbr.blogspot.com/2010/11/editor-de-equacoes-online.html}{Equa\c c\~oes online}.
-\end{ex}
 
 % Referencias bibliograficas
 \begin{thebibliography}{99}
