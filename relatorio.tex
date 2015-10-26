@@ -31,13 +31,44 @@
 \section{Monitoramento e Coleta de Pacotes}
 \label{sec_primeiro_monitoramento}
 
-Aqui deve vir o processo de preparação para o monitoramento e captura de pacotes para os protocolos da camada
-de aplicação. Sendo estes:  
-\begin{enumerate}[a)]
- \item HTTP;
- \item FTP;
- \item DNS;
-\end{enumerate}
+	Para	se capturar os pacotes recebidos e enviados pela rede, foi utilizada a ferramenta \textit{tshark}, uma versão para terminal de comandos que possui todas as opções da ferramenta de interface gráfica \textit{WireShark}, ambas ferramentas de monitoramento e diagnóstico de redes.
+
+	Nos experimentos efetuados para este trabalho, foi utilizada uma distribuição Linux Debian versão 7.9 e para tal, os seguintes passos foram necessários para instalação e configuração do ambiente de experimentação e documentação.
+\begin{lstlisting}[language=bash]
+
+	sudo aptitude install tshark
+
+	sudo aptitude install texlive
+
+	sudo aptitude install texlive-lang-portuguese
+
+
+\end{lstlisting}
+
+	Para que fosse possível analisar os pacotes específicos de cada protocolo da camada de aplicação, foi necessário analisar o tipo de pacote que deveria ser capturado segundo os protocolos de transporte utilizados. No caso de pacotes transmitidos pelo protocolo DNS da camada de aplicação, é necessário capturar apenas pacotes que utilizem na camada de transporte protocolo UDP e que possuam 53 como número de porta de destino. Já para capturar pacotes HTTP, é necessário restringir os pacotes para aqueles que utilizem na camada inferior, protocolo TCP e que tenham 80 como número de porta de destino. O protocolo FTP
+também utiliza protocolo TCP para transporte, mas tem como porta de destino o número 21.
+
+	Nesse sentido, e utilizando as opções disponíveis para captura de pacotes da aplicação de diagnóstico \textit{tshark}, foram definidos os comandos necessários para se filtrar os pacotes capturados para cada um dos protocolos da camada de aplicação descritos acima, foram estes respectivamente:
+\begin{lstlisting}[language=bash]
+
+	tshark udp port 53
+
+	tshark tcp port 80
+
+	tshark tcp port 21
+
+\end{lstlisting}
+
+	Além dos comandos necessários para captura de pacotes, tem de se especificar um arquivo para direcionar a saída do comando executado, resultando nos seguintes comandos finais utilizados:
+\begin{lstlisting}[language=bash]
+
+	tshark udp port 53 > outputDNS.txt
+
+	tshark tcp port 80 > outputHTTP.txt
+
+	tshark tcp port 21 > outputFTP.txt
+
+\end{lstlisting}
 
 \section{Protocolo HTTP}
 \label{sec_http}
@@ -79,8 +110,8 @@ Aqui vai a análise dos dados coletados para o protocolo FTP.
 \section{Monitoramento e Coleta de Pacotes}
 \label{sec_segundo_monitoramento}
 
-Aqui deve vir o processo de preparação para o monitoramento e captura de pacotes para as ferramentas de 
-diagnóstico de redes. Sendo estas:  
+Aqui deve vir o processo de preparação para o monitoramento e captura de pacotes para as ferramentas de
+diagnóstico de redes. Sendo estas:
 \begin{enumerate}[a)]
  \item Traceroute;
  \item Ping;
