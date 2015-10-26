@@ -114,14 +114,65 @@ Após a execução do comando de captura de pacotes especificado na seção ante
 
 \section{Protocolo HTTP}
 \label{sec_http}
-Aqui vai algo sobre o protocolo http.
-\subsection{Dados coletados}
-\label{sub_http_dados}
-Aqui vão os dados coletados para o protocolo HTTP.
+O protocolo HTTP utilizado na camada de aplicação está vinculado à requsuição e ao carregamento de páginas \textit{web}, estas necessitam de tranferência confiável de dados para que nenhuma parte da informação presente na página seja perdida na rede. Nesse sentido, o protocolo HTTP utiliza na camada de transporte o protocolo TCP que disponibiliza em seus serviços transmissão confiável de dados. Esta é uma das características que tornam o TCP mais viável como protocolo de transporte para o HTTP na internet. 
 
-\subsection{Análise}
-\label{sub_http_analise}
-Aqui vai a análise dos dados coletados para o protocolo HTTP.
+	Tendo como base o protocolo TCP, é necessário que ocorra então um \textit{handshake} em três vias para que mensagens HTTP possam transitar na rede. Além disso, menagens HTTP devem especificar a operação a ser executada (como GET, POST, PUT, etc) e a porta de destino utilizada que geralmente é a porta 80. 
+\subsection{Dados coletados e Análise}
+\label{sub_http_dados}
+
+	Após a execução do comando de captura de pacotes especificado na seção anterior, foi aberto um novo terminal para teste de captura com o comando wget apontando para o nome de domínio do site tcpdump, agora escutando por pacotes tcp na porta 80:
+
+\begin{lstlisting}[language=bash]
+	
+	wget http://tcpdump.org/ 
+	
+\end{lstlisting}
+
+	No arquivo de captura, dentre vários pacotes de tranferência de dados, foram selecionados alguns para demonstrar as operações executadas. São eles:
+	
+\begin{lstlisting}[language=bash]
+	72.660377    10.0.2.15 -> 173.194.42.51 TCP 74 60075 > http 
+  [SYN] 	Seq=0 Win=14600 Len=0 MSS=1460 SACK_PERM=1 TSval=4846684 TSecr=0 WS=64
+	72.814395 173.194.42.51 -> 10.0.2.15    TCP 60 http > 60075 
+  [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1460
+	72.814427    10.0.2.15 -> 173.194.42.51 TCP 54 60075 > http 
+  [ACK] Seq=1 Ack=1 Win=14600 Len=0
+	72.814984    10.0.2.15 -> 173.194.42.51 HTTP 168 GET / HTTP/1.1 
+	72.815162 173.194.42.51 -> 10.0.2.15    TCP 60 http > 60075 
+  [ACK] Seq=1 Ack=115 Win=65535 Len=0
+	72.982628 173.194.42.51 -> 10.0.2.15    HTTP 550 HTTP/1.1 302 Found  (text/html)
+	
+     		. . . [finishing connection with host 173.194.42.51]
+	
+	73.141034    10.0.2.15 -> 173.194.42.56 TCP 74 46241 > http 
+  [SYN] Seq=0 Win=14600 Len=0 MSS=1460 SACK_PERM=1 TSval=4846804 TSecr=0 WS=64
+	73.301732 173.194.42.56 -> 10.0.2.15    TCP 60 http > 46241 
+  [SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1460
+     73.301836    10.0.2.15 -> 173.194.42.56 TCP 54 46241 > http 
+  [ACK] Seq=1 Ack=1 Win=14600 Len=0
+     
+     		. . . [data transfer with host 173.194.42.56]
+     					 					
+	73.700321 173.194.42.56 -> 10.0.2.15    HTTP 487 HTTP/1.1 200 OK  (text/html)
+	73.700456    10.0.2.15 -> 173.194.42.56 TCP 54 46241 > http 
+  [ACK] Seq=154 Ack=20286 Win=41122 Len=0     					
+	73.701066    10.0.2.15 -> 173.194.42.56 TCP 54 46241 > http 
+  [FIN, ACK] Seq=154 Ack=20286 Win=41122 Len=0
+	73.701286 173.194.42.56 -> 10.0.2.15    TCP 60 http > 46241
+  [ACK] Seq=20286 Ack=155 Win=65535 Len=0
+	73.868597 173.194.42.56 -> 10.0.2.15    TCP 60 http > 46241 
+  [FIN, ACK] Seq=20286 Ack=155 Win=65535 Len=0
+	73.868618    10.0.2.15 -> 173.194.42.56 TCP 54 46241 > http 
+  [ACK] Seq=155 Ack=20287 Win=41122 Len=0  					
+  
+     
+\end{lstlisting}
+	
+	O primeiro bloco de pacotes mostrado é um \textit{handshake} em três vias do cliente IP 10.0.2.15 com o servidor IP 173.194.42.51, após o \textit{handshake}, o servidor notifica o cliente que encontrou a página requerida e o redireciona para outro servidor que poderá fornecer o pedido, com a flag HTTP 302. Esse comportamento pode indicar que o \textit{host} com IP 173.194.42.51 atua como um \textit{firewall} da rede. 
+	
+	O segundo bloco de pacotes mostra novamente um \textit{handshake} em três vias do cliente IP 10.0.2.15, mas com o servidor IP 173.194.42.56 desta vez, e logo após se inicia a troca de mensagens para o recebimento da página requerida. Após a transferência, o servidor indica que a requisição está ok (HTTP 200), o cliente envia um ACK e após isso ocorre a finalização da conexão TCP, nos quatro últimos pacotes.
+
+	O log completo de saída da captura de pacotes pode ser visualizado no apêndice A.
 
 \section{Protocolo FTP}
 \label{sec_ftp}
