@@ -8,13 +8,23 @@
 \usepackage[lmargin=3cm,rmargin=3cm,tmargin=3cm,bmargin=3cm]{geometry}
 % Layout da pagina
 \usepackage{hyperref}
+% Layout para código
+\usepackage{listings}
+% Font for code style
+\usepackage{courier}
+% The 68 standard colors known to dvips
+\usepackage[usenames,dvipsnames]{xcolor}
 \hypersetup{pdfpagelayout=SinglePage, % ou TwoPageLeft
     colorlinks=true,
-    pdftitle={Relat\'orio de asuhaush Redes},
-    pdfauthor={\'Aulus Diniz, Arthur Jahn}}
+    pdftitle={Relatório de asuhaush Redes},
+    pdfauthor={Áulus Diniz, Arthur Jahn}}
 
 %*******************************************************
-
+\definecolor{light-gray}{gray}{0.90}
+\lstset{
+  backgroundcolor=\color{light-gray},
+  basicstyle=\footnotesize\ttfamily
+}
 
 \title{Fundamentos de Redes de Computadores: Camada de transporte}
 \author{Arthur Jahn, Áulus Diniz}
@@ -70,6 +80,38 @@ também utiliza protocolo TCP para transporte, mas tem como porta de destino o n
 
 \end{lstlisting}
 
+\section{Protocolo DNS}
+\label{sec_dns}
+		O DNS provê serviços de resolução de \textit{hosts} por meio da tradução de nomes de domínios em números de endereçamento IP. Como um mesmo domínio pode estar vinculado a vários endereços IP, esse serviço pode ser responsável também por distribuição de carga entre os \textit{hosts} de destino, alternando o endereço fornecido ao cliente quando uma solicitação de resolução de domínio é feita. Uma consulta DNS consiste basicamente de uma requisição enviada pelo cliente seguida de uma resposta devolvida pelo servidor. Nesse sentido, é interessante a utilização de um protocolo de transporte sem estabelecimento de conexão como o UDP para não acarretar em um atraso na requisição, como no caso do protocolo TCP que necessita de um \textit{handshake} de três vias.
+
+		O serviço de DNS utiliza normalmente a porta 53, sendo esta observada na captura dos pacotes coletados.
+\subsection{Dados coletados e Análise}
+\label{sub_dns_dados}
+
+Após a execução do comando de captura de pacotes especificado na seção anterior, foi aberto um novo terminal para teste de captura com o comando wget apontando para o nome de domínio do site tcpdump:
+\begin{lstlisting}[language=bash]
+
+	wget http://tcpdump.org/
+
+\end{lstlisting}
+
+	No arquivo de captura obteve-se os seguintes pacotes registrados:
+
+\begin{lstlisting}[language=bash]
+
+	0.000000    10.0.2.15 -> 201.10.1.4   DNS 75 Standard query 0x1e44
+  A www.tcpdump.org
+	0.000124    10.0.2.15 -> 201.10.1.4   DNS 75 Standard query 0xde66
+  AAAA www.tcpdump.org
+	0.350827   201.10.1.4 -> 10.0.2.15    DNS 131 Standard query response 0xde66
+  AAAA 2001:4830:116e:2::6 AAAA 2607:f0b0:c:200::66
+	0.356026   201.10.1.4 -> 10.0.2.15    DNS 107 Standard query response 0x1e44
+  A 132.213.238.6 A 192.139.46.66
+
+\end{lstlisting}
+
+	Os pacotes enviados do cliente (IP 10.0.2.15) foram enviados ao \textit{host} de destino com IP 201.10.1.4 que respondeu às solicitações. É importante ressaltar que foram enviadas duas requisições do cliente, e as respostas do servidor DNS continham um identificador IPv6 no primeiro pacote recebido e um IPv4 no segundo. Como especificado na RFC 1886, que descreve sobre a adição de IPv6 com o registro AAAA em consultas DNS \cite{IETF}.
+
 \section{Protocolo HTTP}
 \label{sec_http}
 Aqui vai algo sobre o protocolo http.
@@ -80,17 +122,6 @@ Aqui vão os dados coletados para o protocolo HTTP.
 \subsection{Análise}
 \label{sub_http_analise}
 Aqui vai a análise dos dados coletados para o protocolo HTTP.
-
-\section{Protocolo DNS}
-\label{sec_dns}
-Aqui vai algo sobre o protocolo dns.
-\subsection{Dados coletados}
-\label{sub_dns_dados}
-Aqui vão os dados coletados para o protocolo DNS.
-
-\subsection{Análise}
-\label{sub_dns_analise}
-Aqui vai a análise dos dados coletados para o protocolo DNS.
 
 \section{Protocolo FTP}
 \label{sec_ftp}
@@ -154,14 +185,7 @@ Aqui vai a análise dos dados coletados para a ferramenta nmap.
 % Referencias bibliograficas
 \begin{thebibliography}{99}
 \bibitem{Stewart} STEWART, James. {\sl C\'alculo.} Vol. 1. S\~ao Paulo: Pioneira, 2006.
-
-\bibitem{Oetiker}
-OETIKER, Tobias. Et. Al. {\sl Introdu\c c\~ao ao {\LaTeXe}.}
-\url{http://mirrors.ctan.org/info/lshort/portuguese-BR/lshortBR.pdf},2001.
-
-\bibitem{Tantau}
-TANTAU, Till. {\sl The TikZ and PGF Packages.}
-\url{http://ctan.tche.br/graphics/pgf/base/doc/generic/pgf/pgfmanual.pdf}, 2010.
+\bibitem{IETF} IETF, Internet Engineering Task Force, RFC 1886, \url{http://tools.ietf.org/html/rfc1886}, 1995.
 
 \bibitem{LaTeX}
 \url{http://latexbr.blogspot.com}
