@@ -176,14 +176,88 @@ O protocolo HTTP utilizado na camada de aplicação está vinculado à requsuiç
 
 \section{Protocolo FTP}
 \label{sec_ftp}
-Aqui vai algo sobre o protocolo ftp.
-\subsection{Dados coletados}
+	
+	O protocolo FTP é utilizado para tranferências de arquivos e, para isso, necessita de tranferência confiável de dados pela internet. Sendo assim, também faz uso do protocolo TCP para transporte de mensagens. 
+	
+	Desse modo, é esperado para o FTP que ocorra um \textit{handshake} em três vias para estabelecimento de conexão com o servidor. Após o \textit{handshake}, ocorre a autenticação do usuário para que então ocorra o recebimento do arquivo. 
+	
+\subsection{Dados coletados e Análise}
 \label{sub_ftp_dados}
-Aqui vão os dados coletados para o protocolo FTP.
+	Os passos descritos ateriormente podem ser observados nos pacotes recebidos na porta 21 monitorada quando se solicita um arquivo com o comando:
+	
+\begin{lstlisting}[language=bash]
+	
+	wget ftp://sppedtest.tele2.net/1KB.zip 
+	
+	
+\end{lstlisting}
+	
+	Os pacotes recebidos no arquivo de saída são:
+	
+\begin{lstlisting}[language=bash]
 
-\subsection{Análise}
-\label{sub_ftp_analise}
-Aqui vai a análise dos dados coletados para o protocolo FTP.
+     0.000000    10.0.2.15 -> 90.130.70.73 TCP 74 40899 > ftp [SYN] 
+  Seq=0 Win=14600 Len=0 MSS=1460 SACK_PERM=1 TSval=8682778 TSecr=0 WS=64
+     0.328906 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [SYN, ACK] 
+  Seq=0 Ack=1 Win=65535 Len=0 MSS=1460
+     0.328945    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [ACK] 
+  Seq=1 Ack=1 Win=14600 Len=0
+     0.632970 90.130.70.73 -> 10.0.2.15    FTP 74 Response: 220 (vsFTPd 2.3.5)
+     0.633001    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [ACK] Seq=1 Ack=21 
+  Win=14600 Len=0
+     0.633211    10.0.2.15 -> 90.130.70.73 FTP 70 Request: USER anonymous
+     0.633472 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=21 Ack=17 
+  Win=65535 Len=0 
+     0.942161 90.130.70.73 -> 10.0.2.15    FTP 88 Response: 331 Please specify 
+  the password.
+     0.942293    10.0.2.15 -> 90.130.70.73 FTP 67 Request: PASS -wget@
+     0.942528 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=55 Ack=30 
+  Win=65535 Len=0
+     1.276685 90.130.70.73 -> 10.0.2.15    FTP 77 Response: 230 Login successful.
+     1.276878    10.0.2.15 -> 90.130.70.73 FTP 60 Request: SYST
+     1.276996 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=78 Ack=36  
+  Win=65535 Len=0
+     1.557551 90.130.70.73 -> 10.0.2.15    FTP 73 Response: 215 UNIX Type: L8
+     1.557694    10.0.2.15 -> 90.130.70.73 FTP 59 Request: PWD
+     1.557827 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=97 Ack=41 
+  Win=65535 Len=0
+     1.867867 90.130.70.73 -> 10.0.2.15    FTP 63 Response: 257 "/"
+     1.868044    10.0.2.15 -> 90.130.70.73 FTP 62 Request: TYPE I
+     1.868320 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=106 Ack=49 
+  Win=65535 Len=0
+     2.171201 90.130.70.73 -> 10.0.2.15    FTP 85 Response: 200 Switching to Binary mode.
+     2.171366    10.0.2.15 -> 90.130.70.73 FTP 68 Request: SIZE 1KB.zip
+     2.171679 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=137 Ack=63 
+  Win=65535 Len=0
+     2.475659 90.130.70.73 -> 10.0.2.15    FTP 64 Response: 213 1024
+     2.475784    10.0.2.15 -> 90.130.70.73 FTP 60 Request: PASV
+     2.475938 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=147 Ack=69 
+  Win=65535 Len=0
+     2.884872 90.130.70.73 -> 10.0.2.15    FTP 105 Response: 227 Entering 
+     Passive Mode (90,130,70,73,102,109)
+     2.922799    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [ACK] Seq=69 Ack=197 
+  Win=14600 Len=0
+     3.198408    10.0.2.15 -> 90.130.70.73 FTP 68 Request: RETR 1KB.zip
+     3.198535 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=197 Ack=83 
+  Win=65535 Len=0
+     3.490530 90.130.70.73 -> 10.0.2.15    FTP 121 Response: 150 
+     Opening BINARY mode data connection for 1KB.zip (1024 bytes).
+     3.490549    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [ACK] Seq=83 Ack=264 
+  Win=14600 Len=0
+     3.797609 90.130.70.73 -> 10.0.2.15    FTP 78 Response: 226 Transfer complete.
+     3.797631    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [ACK] Seq=83 Ack=288 
+  Win=14600 Len=0
+     3.797766    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [FIN, ACK] Seq=83 Ack=288 
+  Win=14600 Len=0
+     3.797889 90.130.70.73 -> 10.0.2.15    TCP 60 ftp > 40899 [ACK] Seq=288 Ack=84 
+  Win=65535 Len=0
+     4.119880 90.130.70.73 -> 10.0.2.15    FTP 94 Response: 500 OOPS: 
+  vsf_sysutil_recv_peek: no data
+     4.119911    10.0.2.15 -> 90.130.70.73 TCP 54 40899 > ftp [RST] Seq=84 Win=0 Len=0
+	
+\end{lstlisting}	
+
+	Os pacotes recebidos evidenciam o \textit{handshake} entre o cliente IP 10.0.2.15 com o servidor IP 90.130.70.73 e é importante ressaltar que houve o processo de autorização (mesmo que de um usuário anônimo) para que a transferência ocorrece. Além disso, é possível observar também que o protocolo FTP não criptografa informações de usuário e senha, o que o torna pouco utilizado sem mecanismos de criptografia, como um protocolo ssl ou um ftp sob ssh. 
 
 %-------------------------------------------------------
 \chapter{Ferramentas de Diagnóstico de Redes}
