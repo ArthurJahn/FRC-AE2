@@ -449,7 +449,9 @@ Os pacotes coletados pela aplicação são:
 
 \subsection{Análise}
 \label{sub_traceroute_analise}
-É possível observar que a troca
+É possível observar que a troca de pacotes acontece através do protocolo UDP e também que a porta de comunicação e o campo \textit{TTL} são incrementados, até que receba uma \textit{ICMP ["port unreachable"]} (não aparece no log) indicando que chegou ao destino.
+Não foi observado perdas de pacote, já que não houve troca de mensagem \textit{ICMP ["time exceeded"]}. Para a simulação realizada o endereço IP de origem 192.168.1.8 e destino 192.139.46.66.
+
 
 \section{Ping}
 \label{sec_ping}
@@ -546,6 +548,7 @@ Internet Control Message Protocol
   Request frame: 207
   Timestamp from icmp data: Oct 25, 2015 21:22:10.328175000 BRST
   Timestamp from icmp data (relative): 0.013197000 seconds
+
 \end{lstlisting}
 
 \subsection{Análise}
@@ -568,7 +571,9 @@ Nessa execução foram transmitidos 6 pacotes, sem perdas. O tempo minimo foi de
 
 \section{Nmap}
 \label{sec_nmap}
-Aqui vai algo sobre o nmap.
+O \textit{Nmap} é um software livre utilizado para varrer as portas de um \textit{host} visando encontrar problemas de segurança. É uma potente ferramenta devido a simplicidade e opções de utilização. Utiliza o protocolo \textbf{IP} em estado bruto (raw).
+
+
 \subsection{Dados coletados}
 \label{sub_nmap_dados}
 Aqui vão os dados coletados para a ferramenta nmap.
