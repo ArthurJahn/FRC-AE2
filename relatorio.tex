@@ -28,7 +28,7 @@
 }
 
 \title{Fundamentos de Redes de Computadores: \\ Camada de Transporte}
-\author{Arthur Jahn, Áulus Diniz}
+\author{Arthur Jahn, Áulus Diniz, Gabriel Araújo}
 \date{26 de Outubro de 2015}    %para ocultar a data digite: \date{ }
 %*******************************************************
 \begin{document}    %Inicio do documento
@@ -266,6 +266,7 @@ O protocolo HTTP utilizado na camada de aplicação está vinculado à requsuiç
 \section{Monitoramento e Coleta de Pacotes}
 \label{sec_segundo_monitoramento}
 
+\subsection{Traceroute}
 Para realizar o monitoramento e coleta de pacotes foi utilizado o sistema operacional \textit{Debian 7.7} e a aplicação \textit{tshark} para monitorar a troca de pacotes na rede.
 Os \textit{outputs} da execução do \textit{tshark}, para cada uma das ferramentas listadas abaixo, são lançados para um arquivo com nome "output" + Nome da ferramenta + ".txt".
 
@@ -274,11 +275,6 @@ Os \textit{outputs} da execução do \textit{tshark}, para cada uma das ferramen
 	sudo tshark -i wlan0
 \end{lstlisting}
 
-\begin{enumerate}[a)]
- \item Traceroute;
- \item Ping;
- \item Nmap;
-\end{enumerate}
 
 \subsection{Ping}
 Para a realização da analise de pacotes enviados e recebidos pela ferramenta de diagnóstico Ping, foi utilizado a ferramenta WireShark. Esse experimento foi realizado utilizando-se um Mac OS X e as configurações necessárias para a execução do experimento estão listadas abaixo.
@@ -287,6 +283,11 @@ Para a realização da analise de pacotes enviados e recebidos pela ferramenta d
     \item Instalação do WireShark - https://www.wireshark.org/#download
     \item Instalação do XQuartz - Ferramenta que habilita o WireShark ser execultado no Mac OSX. - https://xquartz.macosforge.org/trac
 \end{enumerate}
+
+\subsection{NMAP}
+Para a execução do experimento do NMAP, é necessario a instalação disponivel em
+https://nmap.org/book/install.html
+
 
 
 \section{Traceroute}
@@ -573,14 +574,100 @@ Nessa execução foram transmitidos 6 pacotes, sem perdas. O tempo minimo foi de
 \label{sec_nmap}
 O \textit{Nmap} é um software livre utilizado para varrer as portas de um \textit{host} visando encontrar problemas de segurança. É uma potente ferramenta devido a simplicidade e opções de utilização. Utiliza o protocolo \textbf{IP} em estado bruto (raw).
 
+Uma das funções do nmap é a analise da rede visando encontrar \textit{hosts}. O nmap executa varias requisições Ping em um sub-dominio da rede. Os Ping que obtiverem uma resposta, indicam a presença de um host nesse determinado endereço de \textbf{IP}.
+
 
 \subsection{Dados coletados}
 \label{sub_nmap_dados}
-Aqui vão os dados coletados para a ferramenta nmap.
+Para a coleta de pacotes da ferramenta nmap, foi inicializada a análise da rede pelo WireShark. Em seguinda iniciou-se a ferramenta nmap, conforme descrito anteriormente, execultando o comando:
+
+\begin{lstlisting}[language=bash]
+nmap -sP 192.168.0.0/24
+\end{lstlisting}
+
+O comando acima executa em um \textbf{IP} uma requisição TCP/IP. Uma vez que o \textbf{IP} passado é uma sub-rede, ou seja, o nmap executará em todos os IP de 192.168.0.0 a 192.168.0.255. Após a execução do comando, foram registradas as seguintes requisições através do WireShark
+
+\begin{lstlisting}[language=bash]
+25	2.559406000	192.168.0.14	192.168.0.1	TCP	78	62425→80 [SYN] Seq=0 Win=65535 Len=0 MSS=1460 WS=32 TSval=875064134 TSecr=0 SACK_PERM=1
+26	2.559465000	Apple_c5:5c:c8	Broadcast	ARP	42	Who has 192.168.0.2?  Tell 192.168.0.14
+27	2.559518000	Apple_c5:5c:c8	Broadcast	ARP	42	Who has 192.168.0.3?  Tell 192.168.0.14
+28	2.559612000	Apple_c5:5c:c8	Broadcast	ARP	42	Who has 192.168.0.4?  Tell 192.168.0.14
+
+[...]
+
+35	2.562883000	192.168.0.1	192.168.0.14	TCP	74	80→62425 [SYN, ACK] Seq=0 Ack=1 Win=17376 Len=0 MSS=1460 WS=1 TSval=79204428 TSecr=875064134
+
+[...]
+
+267	3.908991000	Apple_c5:5c:c8	Broadcast	ARP	42	Who has 192.168.0.254?  Tell 192.168.0.14
+\end{lstlisting}
+
+Após a execução do programa, o seguinte resultado foi obtido.
+
+\begin{lstlisting}[language=bash]
+Starting Nmap 6.49BETA5 ( https://nmap.org ) at 2015-10-26 22:39 BRST
+Nmap scan report for 192.168.0.1
+Host is up (0.046s latency).
+Nmap scan report for 192.168.0.10
+Host is up (0.0053s latency).
+Nmap scan report for 192.168.0.14
+Host is up (0.00017s latency).
+Nmap done: 256 IP addresses (3 hosts up) scanned in 3.83 seconds
+\end{lstlisting}
+
+Indicando a presença de três hosts conectados à rede atual.
 
 \subsection{Análise}
 \label{sub_nmap_analise}
-Aqui vai a análise dos dados coletados para a ferramenta nmap.
+
+O pacote analisado foi o de numero 25, uma vez que representa o pacote que indica um host ativo na rede.
+
+\begin{lstlisting}[language=bash]
+Ethernet II, Src: Apple_c5:5c:c8 (3c:15:c2:c5:5c:c8), Dst: Technico_5b:59:b6 (58:23:8c:5b:59:b6)
+    Destination: Technico_5b:59:b6 (58:23:8c:5b:59:b6)
+    Source: Apple_c5:5c:c8 (3c:15:c2:c5:5c:c8)
+    Type: IP (0x0800)
+Internet Protocol Version 4, Src: 192.168.0.14 (192.168.0.14), Dst: 192.168.0.1 (192.168.0.1)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+    Total Length: 64
+    Identification: 0xed80 (60800)
+    Flags: 0x02 (Don't Fragment)
+    Fragment offset: 0
+    Time to live: 255
+    Protocol: TCP (6)
+    Header checksum: 0x0cd7 [validation disabled]
+    Source: 192.168.0.14 (192.168.0.14)
+    Destination: 192.168.0.1 (192.168.0.1)
+Transmission Control Protocol, Src Port: 62425 (62425), Dst Port: 80 (80), Seq: 0, Len: 0
+    Source Port: 62425 (62425)
+    Destination Port: 80 (80)
+    Sequence number: 0    (relative sequence number)
+    Acknowledgment number: 0
+\end{lstlisting}
+
+Percebe-se do pacote analizado acima a utilização do protocolo TCP e a requisição do tipo IP. Para que a existência do host no IP 192.168.0.1 seja validada espera-se um pacote de volta com o numero sequencial igual à 0 e o ACK igual à 1, o que pode ser visto no pacote de numero 35.
+
+\begin{lstlisting}[language=bash]
+Internet Protocol Version 4, Src: 192.168.0.1 (192.168.0.1), Dst: 192.168.0.14 (192.168.0.14)
+Version: 4
+Header Length: 20 bytes
+Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+Total Length: 60
+Identification: 0x797d (31101)
+Flags: 0x02 (Don't Fragment)
+Protocol: TCP (6)
+Source: 192.168.0.1 (192.168.0.1)
+Destination: 192.168.0.14 (192.168.0.14)
+Transmission Control Protocol, Src Port: 80 (80), Dst Port: 62425 (62425), Seq: 0, Ack: 1, Len: 0
+Source Port: 80 (80)
+Destination Port: 62425 (62425)
+Sequence number: 0    (relative sequence number)
+Acknowledgment number: 1    (relative ack number)
+\end{lstlisting}
+
+Uma vez que o protocolo utilizado é o TCP e que \textit{source/destination} e \textit{Source Port/ Destination Port} estão de acordo com o protocolo(Estabelecendo uma conexão) e o que o numero de ACK e de SEQ estão de acordo com uma troca típica de informações no TCP, conclui-se a existência de um host no IP 192.168.0.1 (roteador da rede).
 
 % Referencias bibliograficas
 \begin{thebibliography}{99}
